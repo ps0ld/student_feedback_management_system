@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Give Feedback - Student Feedback System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="{{ url_for('index') }}">Student Feedback System</a>
+        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+    </header>
+
+    {# One rating question: five radio buttons from 1 to 5 #}
+    {% macro rating(name, label) %}
+    <div class="field">
+        <span class="label">{{ label }}</span>
+        <div class="rating">
+            {% for n in range(1, 6) %}
+            <label>
+                <input type="radio" name="{{ name }}" value="{{ n }}"
+                       {% if form.get(name) == n|string %}checked{% endif %} required>
+                <span>{{ n }}</span>
+            </label>
+            {% endfor %}
+        </div>
+        <small class="hint">1 = Poor, 5 = Excellent</small>
+    </div>
+    {% endmacro %}
+
+    <main class="container">
+        <section class="card reveal">
+            <h2>Teacher Feedback Form</h2>
+            <p class="muted">All fields marked * are required.</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="messages">
+                    {% for category, message in messages %}
+                        <div class="alert {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('feedback') }}">
+                <div class="grid">
+                    <div class="field">
+                        <label class="label" for="student_name">Student Name *</label>
+                        <input type="text" id="student_name" name="student_name" maxlength="100"
+                               value="{{ form.get('student_name', '') }}" required>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="roll_number">Roll Number *</label>
+                        <input type="text" id="roll_number" name="roll_number" maxlength="30"
+                               value="{{ form.get('roll_number', '') }}" required>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="branch">Course / Branch *</label>
+                        <select id="branch" name="branch" required>
+                            <option value="">Select branch</option>
+                            {% for b in branches %}
+                            <option value="{{ b }}" {% if form.get('branch') == b %}selected{% endif %}>{{ b }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="semester">Semester *</label>
+                        <select id="semester" name="semester" required>
+                            <option value="">Select semester</option>
+                            {% for s in semesters %}
+                            <option value="{{ s }}" {% if form.get('semester') == s|string %}selected{% endif %}>Semester {{ s }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="teacher_name">Teacher Name *</label>
+                        <input type="text" id="teacher_name" name="teacher_name" maxlength="100"
+                               value="{{ form.get('teacher_name', '') }}" required>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="subject_name">Subject Name *</label>
+                        <input type="text" id="subject_name" name="subject_name" maxlength="100"
+                               value="{{ form.get('subject_name', '') }}" required>
+                    </div>
+                </div>
+
+                <h3 class="section-title">Rate your teacher</h3>
+
+                <div class="grid">
+                    {{ rating("teaching_quality", "Teaching Quality *") }}
+                    {{ rating("communication", "Communication Skills *") }}
+                    {{ rating("doubt_clearing", "Doubt Clearing *") }}
+                    {{ rating("overall", "Overall Experience *") }}
+                </div>
+
+                <div class="field">
+                    <label class="label" for="comments">Suggestions or Comments</label>
+                    <textarea id="comments" name="comments" rows="4" maxlength="500"
+                              placeholder="What went well? What can be better?">{{ form.get('comments', '') }}</textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Submit Feedback</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script>
+        if (window.gsap && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            gsap.from(".reveal", { y: 20, opacity: 0, duration: 0.6, ease: "power2.out" });
+        }
+    </script>
+</body>
+</html>

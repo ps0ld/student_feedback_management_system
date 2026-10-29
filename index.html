@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Feedback System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <span class="brand">Student Feedback System</span>
+    </header>
+
+    <main class="container narrow">
+        <section class="hero reveal">
+            <h1>Student Feedback System</h1>
+            <p>Tell us how your teachers are doing. Your honest feedback helps the college improve teaching for everyone.</p>
+
+            <div class="button-row">
+                <a class="btn btn-primary" href="{{ url_for('feedback') }}">Student Login</a>
+                <a class="btn btn-outline" href="{{ url_for('admin_login') }}">Admin Login</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">College Project &middot; Flask + SQLite</footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script>
+        // Small page-load fade-in. If GSAP cannot load, the page still works.
+        if (window.gsap && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            gsap.from(".reveal", { y: 20, opacity: 0, duration: 0.6, ease: "power2.out" });
+        }
+    </script>
+</body>
+</html>
